@@ -4,7 +4,8 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcrypt";
 
-const handler = NextAuth({
+// ✅ Export authOptions just once here
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -12,19 +13,21 @@ const handler = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-async authorize(credentials) {
-  await connectDB();
-  const user = await User.findOne({ email: credentials.email });
-  if (!user) throw new Error("User not found");
-  if (!user.emailVerified) throw new Error("Email not verified");
-  
-  const isValid = await bcrypt.compare(credentials.password, user.password);
-  if (!isValid) throw new Error("Invalid credentials");
+      async authorize(credentials) {
+        await connectDB();
+        const user = await User.findOne({ email: credentials.email });
+        if (!user) throw new Error("User not found");
+        if (!user.emailVerified) throw new Error("Email not verified");
 
-  return { id: user._id.toString(), email: user.email, name: user.firstName };
-}
+        const isValid = await bcrypt.compare(credentials.password, user.password);
+        if (!isValid) throw new Error("Invalid credentials");
 
-
+        return {
+          id: user._id.toString(),
+          email: user.email,
+          name: user.firstName,
+        };
+      },
     }),
   ],
   pages: {
@@ -48,6 +51,8 @@ async authorize(credentials) {
       return session;
     },
   },
-});
+};
 
-export { handler as GET, handler as POST };
+// ✅ Export handler + authOptions just once
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST, authOptions };
