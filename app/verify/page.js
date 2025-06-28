@@ -6,12 +6,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 export default function VerifyEmail() {
   const params = useSearchParams();
   const router = useRouter();
-  const token = params.get('token');
   const [status, setStatus] = useState('Verifying your email...');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = params.get('token');
     if (!token) {
       setStatus('❌ Invalid or missing verification token.');
       setLoading(false);
