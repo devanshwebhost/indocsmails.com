@@ -4,6 +4,10 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import ClientDashboard from "../components/ClientDashboard"; // your current form UI
+import ControlPanelClient from "../ControlPanel/ControlPanelClient"; 
+import DynamicContactForm1 from "../DynamicContactForms(users)/DynamicContactForm1";
+import CodePreviewer from "../components/CodePreviewer"; // your code preview component
+import ApiDocumentation from "../components/ApiDocumentation";
 
 export default async function Page() {
   const session = await getServerSession(authOptions);
@@ -22,5 +26,19 @@ export default async function Page() {
   await connectDB();
   const user = await User.findOne({ email: session.user.email }).lean();
 
-  return <ClientDashboard user={user} />;
+  return (
+  <div className=" overflow-hidden min-h-screen bg-gradient-to-br from-teal-700 to-cyan-800 flex flex-col items-center justify-center px-4 py-10">
+    <ClientDashboard user={user} />
+    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen px-4 py-10 gap-6">
+    <ControlPanelClient user={user} />
+    <DynamicContactForm1 user={user} />
+    </div>
+    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen px-4 py-10 gap-6">
+    <CodePreviewer defaultLanguage="html" />
+    <ApiDocumentation/>
+    </div>
+
+  </div>
+);
+
 }

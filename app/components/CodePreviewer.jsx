@@ -1,215 +1,10 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
-export default function Home() {
-  const [formData, setFormData] = useState({
-    ownerEmail: '',
-    appPassword: '',
-    adminEmail: '',
-    replyMessage: '',
-  });
-
-  const [logo, setLogo] = useState(null);
-  const [responseMsg, setResponseMsg] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  // Custom field builder state
-  const [customFields, setCustomFields] = useState([]);
-  const [newField, setNewField] = useState({
-    type: 'text',
-    label: '',
-    name: '',
-    required: false,
-  });
-
-  const fieldTypes = ['text', 'email', 'phone', 'file', 'textarea'];
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleNewFieldChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewField(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const addField = () => {
-    if (!newField.label || !newField.name) return alert('Label and Name required');
-    setCustomFields(prev => [...prev, newField]);
-    setNewField({ type: 'text', label: '', name: '', required: false });
-  };
-
-  const removeField = (index) => {
-    setCustomFields(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleLogoChange = (e) => {
-    setLogo(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setResponseMsg('');
-
-  const form = new FormData();
-  form.append('ownerEmail', formData.ownerEmail);
-  form.append('appPassword', formData.appPassword);
-  form.append('adminEmail', formData.adminEmail);
-  form.append('replyMessage', formData.replyMessage);
-  form.append('fields', JSON.stringify(customFields));
-  if (logo) form.append('logo', logo);
-
-  // ✅ Replace this with however you get user data
-  const apiKey = user?.apiKey; // or from session/state/props
-
-  if (!apiKey) {
-    setResponseMsg('❌ API key not found. Please login again.');
-    setLoading(false);
-    return;
-  }
-
-  console.log('📦 Sending form data:', [...form.entries()]);
-
-  try {
-    const res = await fetch('https://indocsmails.onrender.com/config', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey, // ✅ Add API key to headers
-      },
-      body: form,
-    });
-
-    const data = await res.json();
-    console.log('📩 Response:', data);
-
-    if (data.success) {
-      setResponseMsg('✅ Configuration saved!');
-      toast.success("Configuration saved successfully! 🎉");
-    } else {
-      setResponseMsg(`❌ Failed to save config: ${data.error || 'Unknown error'}`);
-    }
-  } catch (err) {
-    console.error('❌ Network/Server Error:', err);
-    setResponseMsg('❌ Server error');
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-  return (
-    <main className="min-h-screen bg-gray-100 p-6  items-center justify-center ">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-xl shadow-md w-full max-w-2xl space-y-4"
-      >
-        <h2 className="text-2xl font-bold text-center text-[#0c52a2]">Email API Control Panel</h2>
-
-        {/* Email Config */}
-        <input type="email" name="ownerEmail" placeholder="Owner Gmail" className="w-full p-2 border rounded" onChange={handleChange} required />
-        <input type="password" name="appPassword" placeholder="App Password" className="w-full p-2 border rounded" onChange={handleChange} required />
-        <input type="email" name="adminEmail" placeholder="Receiver Email" className="w-full p-2 border rounded" onChange={handleChange} required />
-        <textarea name="replyMessage" placeholder="Auto Reply Message" rows="4" className="w-full p-2 border rounded" onChange={handleChange}></textarea>
-
-        {/* Logo Upload */}
-        <label className="block text-sm font-medium">Upload Logo (optional):</label>
-        <input type="file" accept="image/*" className="w-full p-2 border rounded" onChange={handleLogoChange} />
-
-        {/* --- Custom Field Builder --- */}
-        <div className="mt-6 border-t pt-4">
-          <h3 className="font-semibold mb-2 text-lg">➕ Custom Form Fields</h3>
-
-          <div className="grid md:grid-cols-2 gap-3">
-            <input type="text" name="label" placeholder="Field Label" className="p-2 border rounded" value={newField.label} onChange={handleNewFieldChange} />
-            <input type="text" name="name" placeholder="Field Name (unique)" className="p-2 border rounded" value={newField.name} onChange={handleNewFieldChange} />
-            <select name="type" className="p-2 border rounded" value={newField.type} onChange={handleNewFieldChange}>
-              {fieldTypes.map(type => <option key={type} value={type}>{type}</option>)}
-            </select>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" name="required" checked={newField.required} onChange={handleNewFieldChange} />
-              <span>Required?</span>
-            </label>
-          </div>
-
-          <button type="button" onClick={addField} className="mt-3 bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700">
-            ➕ Add Field
-          </button>
-
-          {/* Show added fields */}
-          <ul className="mt-4 space-y-2">
-            {customFields.map((field, index) => (
-              <li key={index} className="p-2 bg-gray-100 rounded flex justify-between items-center">
-                <span>{field.label} ({field.type}) {field.required && '*'}</span>
-                <button type="button" onClick={() => removeField(index)} className="text-red-600 hover:underline">Remove</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full ${loading ? 'bg-gray-400' : 'bg-[#0c52a2] hover:bg-[#083d7a]'} text-white py-2 rounded`}
-        >
-          {loading ? 'Saving...' : 'Save Configuration'}
-        </button>
-
-        {/* Response Message */}
-        {responseMsg && <p className="text-center mt-2 font-medium">{responseMsg}</p>}
-      </form>
-      <form action="/api/auth/signout" method="post" className="mt-8 flex justify-center mb-2">
-          <button
-  type="submit"
-  className="flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-semibold shadow-md hover:bg-red-700 transition duration-200"
->
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
-  </svg>
-  Logout
-</button>
-
-        </form>
-    </main>
-  );
-
-
-
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- seee -->
-
-
-
-
+// Placeholder for sampleCodes. In a real application, these would be
+// defined elsewhere or imported. For this example, we assume they exist.
+// This is crucial for the CodePreviewer to function.
 const sampleCodes = {
   html: `<!DOCTYPE html>
 <html lang="en">
@@ -705,7 +500,7 @@ def submit_form():
 
     # Re-render the form with the submission message
     config = MOCK_CONFIG.get('config', {})
-    logo_path = config.get('logoPath', '')
+    logo_path = config.get('logo', '')
     if logo_path.startswith('/'):
         logo_path = f"{API_BASE}{logo_path}"
 
@@ -731,3 +526,184 @@ if __name__ == '__main__':
     app.run(debug=True) # debug=True will restart the server on code changes
 `
 };
+
+export default function CodePreviewer() {
+  const [language, setLanguage] = useState('html');
+  const [copied, setCopied] = useState(false);
+  const [showQuestionInput, setShowQuestionInput] = useState(false);
+  const [userQuestion, setUserQuestion] = useState('');
+  const [geminiAnswer, setGeminiAnswer] = useState('');
+  const [isAnswering, setIsAnswering] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(sampleCodes[language]).then(() => {
+      toast.success('Copied to clipboard ✅');
+      setCopied(true); // Set copied to true on successful copy
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+      toast.error('Failed to copy! ❌');
+    });
+  };
+
+  const handleAskQuestion = async () => {
+    if (!userQuestion.trim()) {
+      toast.warn('Please enter your question! 🤔');
+      return;
+    }
+
+    setIsAnswering(true);
+    setGeminiAnswer(''); // Clear previous answer
+    toast.info('Asking Gemini... 🧠');
+
+    try {
+      let chatHistory = [];
+      chatHistory.push({
+        role: "user",
+        parts: [{ text: `Regarding the following ${language} code:\n\n\`\`\`${language}\n${sampleCodes[language]}\n\`\`\`\n\nMy question is: ${userQuestion}` }]
+      });
+
+      const payload = { contents: chatHistory };
+      const apiKey = ""; // Canvas will automatically provide this
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.candidates && result.candidates.length > 0 &&
+          result.candidates[0].content && result.candidates[0].content.parts &&
+          result.candidates[0].content.parts.length > 0) {
+        const text = result.candidates[0].content.parts[0].text;
+        setGeminiAnswer(text);
+        toast.success('Answer received! 🎉');
+      } else {
+        setGeminiAnswer('Sorry, I could not get an answer for that question. Please try again or rephrase. 😔');
+        toast.error('Failed to get answer. 😞');
+      }
+    } catch (err) {
+      console.error("Gemini API error:", err);
+      setGeminiAnswer('An error occurred while connecting to Gemini. Please try again later. 🚧');
+      toast.error('API connection error. 🚨');
+    } finally {
+      setIsAnswering(false);
+    }
+  };
+
+
+  return (
+    <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-3xl shadow-2xl max-w-4xl mx-auto my-10 border border-blue-200">
+      <h2 className="text-2xl font-extrabold text-center text-blue-700 mb-8 pb-4 border-b-4 border-blue-300 transform transition duration-300">
+        Ready-to-Use Code Snippets ✨
+      </h2>
+
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
+        {/* Language Selector */}
+        <select
+          className="flex-grow w-full sm:w-auto border border-blue-400 p-3 rounded-xl bg-white text-blue-800 text-base shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out cursor-pointer"
+          value={language}
+          onChange={(e) => {
+            setLanguage(e.target.value);
+            setGeminiAnswer(''); // Clear answer when language changes
+            setShowQuestionInput(false); // Hide question input
+          }}
+        >
+          <option value="html">HTML</option>
+          <option value="react">React</option>
+          <option value="python">Python</option>
+        </select>
+
+        {/* Action Buttons */}
+        <div className="flex w-full sm:w-auto space-x-4">
+          <button
+            onClick={handleCopy}
+            className="flex-1 sm:flex-none bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2"
+          >
+            {copied ? (
+              <>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+                <span>Copied!</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
+                <span>Copy Code</span>
+              </>
+            )}
+          </button>
+          <button
+            onClick={() => {
+              setShowQuestionInput(prev => !prev); // Toggle visibility
+              setGeminiAnswer(''); // Clear previous answer
+              setUserQuestion(''); // Clear previous question
+            }}
+            className="flex-1 sm:flex-none bg-purple-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-purple-700 active:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5L6 11H5a1 1 0 100 2h1a1 1 0 00.867.5L10 9h1a1 1 0 100-2h-1z" clipRule="evenodd"></path></svg>
+            <span>Ask a Question</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Code Preview Area - Now using <pre><code> for raw code display */}
+      <div className="rounded-2xl overflow-auto shadow-xl border border-gray-300 bg-gray-900 text-gray-200" style={{maxHeight: '500px'}}>
+        <pre className="p-6 text-sm leading-relaxed" style={{ fontFamily: 'Fira Code, monospace', whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+          <code>
+            {sampleCodes[language]}
+          </code>
+        </pre>
+      </div>
+
+      {/* Question and Answer Section */}
+      {showQuestionInput && (
+        <div className="mt-8 p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+          <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg className="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9.247a1.25 1.25 0 00-1.242 1.242l1.242 1.242a1.25 1.25 0 001.242-1.242l-1.242-1.242zm0 0L21 3m-12 9v5h5"></path></svg>
+            Ask Gemini about the Code
+          </h3>
+          <textarea
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out mb-4"
+            rows="4"
+            placeholder="Type your question about the code here (e.g., 'What does the handleSubmit function do?', 'How can I add validation to this form?')"
+            value={userQuestion}
+            onChange={(e) => setUserQuestion(e.target.value)}
+            disabled={isAnswering}
+          ></textarea>
+          <button
+            onClick={handleAskQuestion}
+            disabled={isAnswering}
+            className={`w-full bg-purple-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md ${isAnswering ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700 active:bg-purple-800'} focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2`}
+          >
+            {isAnswering ? (
+              <>
+                <svg className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Getting Answer...</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM8 9H7a1 1 0 000 2h1a1 1 0 100-2zm6 0h-1a1 1 0 100 2h1a1 1 0 100-2zm-3 0h-1a1 1 0 100 2h1a1 1 0 100-2z" clipRule="evenodd"></path></svg>
+                <span>Submit Question</span>
+              </>
+            )}
+          </button>
+
+          {geminiAnswer && (
+            <div className="mt-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
+              <h4 className="text-lg font-semibold text-purple-800 mb-2">Gemini's Answer:</h4>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{geminiAnswer}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+    </div>
+  );
+}
+

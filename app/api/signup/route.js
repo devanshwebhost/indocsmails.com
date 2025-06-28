@@ -3,6 +3,7 @@ import User from "@/models/User";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 export async function POST(req) {
   try {
@@ -21,6 +22,11 @@ export async function POST(req) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // ✅ Generate API key securely
+    const apiKey = crypto.randomBytes(32).toString("hex");
+
+    // ✅ Save user with API key
     const newUser = await User.create({
       email,
       password: hashedPassword,
@@ -29,12 +35,19 @@ export async function POST(req) {
       phone,
       address,
       emailVerified: false,
+      apiKey, // <-- store it
     });
 
-    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    // 🔐 Email Verification Token
+    const token = jwt.sign(
+      { email: newUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
     const url = `${process.env.NEXTAUTH_URL}/verify?token=${token}`;
 
+    // 📧 Send verification email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -50,7 +63,11 @@ export async function POST(req) {
       html: `<p>Click below to verify your email:</p><a href="${url}">Verify Email</a>`,
     });
 
-    return Response.json({ message: "Signup successful, verify your email" });
+    return Response.json({
+      message: "Signup successful, verify your email",
+      apiKey, // (optional) return it temporarily for dev testing
+    });
+
   } catch (err) {
     console.error(err);
     return Response.json({ error: "Internal error" }, { status: 500 });

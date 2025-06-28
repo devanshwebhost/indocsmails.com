@@ -1,163 +1,230 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import React, { useState } from "react";
+// Removed Link from next/link to ensure broader React compatibility in Canvas
+import { toast } from 'react-toastify'; // Assuming toast is available for notifications
 
-export default function Home() {
-  const [formData, setFormData] = useState({
-    ownerEmail: '',
-    appPassword: '',
-    adminEmail: '',
-    replyMessage: '',
-  });
+export default function Dashboard({ user }) {
+  const [showKey, setShowKey] = useState(false);
+  // const [feedbackText, setFeedbackText] = useState('');
+  // const [isSendingFeedback, setIsSendingFeedback] = useState(false);
+  // const [feedbackResponse, setFeedbackResponse] = useState(null);
 
-  const [logo, setLogo] = useState(null);
-  const [responseMsg, setResponseMsg] = useState('');
-  const [loading, setLoading] = useState(false);
+  // Safely access apiKey, providing a default if user or apiKey is undefined
+  const apiKey = user?.apiKey || "API_KEY_NOT_AVAILABLE";
 
-  // Custom field builder state
-  const [customFields, setCustomFields] = useState([]);
-  const [newField, setNewField] = useState({
-    type: 'text',
-    label: '',
-    name: '',
-    required: false,
-  });
-
-  const fieldTypes = ['text', 'email', 'phone', 'file', 'textarea'];
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleNewFieldChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewField(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const addField = () => {
-    if (!newField.label || !newField.name) return alert('Label and Name required');
-    setCustomFields(prev => [...prev, newField]);
-    setNewField({ type: 'text', label: '', name: '', required: false });
-  };
-
-  const removeField = (index) => {
-    setCustomFields(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleLogoChange = (e) => {
-    setLogo(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setResponseMsg('');
-
-    const form = new FormData();
-    form.append('ownerEmail', formData.ownerEmail);
-    form.append('appPassword', formData.appPassword);
-    form.append('adminEmail', formData.adminEmail);
-    form.append('replyMessage', formData.replyMessage);
-    form.append('fields', JSON.stringify(customFields));
-    if (logo) form.append('logo', logo);
-
-    // Debug log
-    console.log('📦 Sending form data:', [...form.entries()]);
-
+  const handleCopyApiKey = () => {
+    // Using document.execCommand('copy') for clipboard functionality due to iframe restrictions
+    // navigator.clipboard.writeText is preferred but might not work in all iframe contexts
+    const tempInput = document.createElement('textarea');
+    tempInput.value = apiKey;
+    document.body.appendChild(tempInput);
+    tempInput.select();
     try {
-      const res = await fetch('https://indocsmails.onrender.com/config', {
-        method: 'POST',
-        body: form,
-      });
-
-      const data = await res.json();
-      console.log('📩 Response:', data);
-
-      if (data.success) {
-        setResponseMsg('✅ Configuration saved!');
-      } else {
-        setResponseMsg(`❌ Failed to save config: ${data.error || 'Unknown error'}`);
-      }
+      document.execCommand('copy');
+      toast.success('API Key copied! ✅');
     } catch (err) {
-      console.error('❌ Network/Server Error:', err);
-      setResponseMsg('❌ Server error');
-    } finally {
-      setLoading(false);
+      console.error('Failed to copy API Key:', err);
+      toast.error('Failed to copy API Key! ❌');
     }
+    document.body.removeChild(tempInput);
   };
+
+  // const handleLogout = () => {
+  //   // In a real application, this would trigger an actual logout process (e.g., clearing auth tokens, redirecting)
+  //   // For this demonstration, we'll just show a toast.
+  //   toast.info('Logging out... 👋');
+  //   // Simulate logout action, e.g., redirect to login page or clear user state
+  //   setTimeout(() => {
+  //       // Example: if you have a way to set user to null or redirect
+  //       // setUser(null);
+  //       window.location.href = '/login'; // Or similar redirect
+  //       toast.success('Successfully logged out! See you soon! 🚀');
+  //   }, 1000);
+  // };
+
+
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6 flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-xl shadow-md w-full max-w-2xl space-y-4"
-      >
-        <h2 className="text-2xl font-bold text-center text-[#0c52a2]">Email API Control Panel</h2>
-
-        {/* Email Config */}
-        <input type="email" name="ownerEmail" placeholder="Owner Gmail" className="w-full p-2 border rounded" onChange={handleChange} required />
-        <input type="password" name="appPassword" placeholder="App Password" className="w-full p-2 border rounded" onChange={handleChange} required />
-        <input type="email" name="adminEmail" placeholder="Receiver Email" className="w-full p-2 border rounded" onChange={handleChange} required />
-        <textarea name="replyMessage" placeholder="Auto Reply Message" rows="4" className="w-full p-2 border rounded" onChange={handleChange}></textarea>
-
-        {/* Logo Upload */}
-        <label className="block text-sm font-medium">Upload Logo (optional):</label>
-        <input type="file" accept="image/*" className="w-full p-2 border rounded" onChange={handleLogoChange} />
-
-        {/* --- Custom Field Builder --- */}
-        <div className="mt-6 border-t pt-4">
-          <h3 className="font-semibold mb-2 text-lg">➕ Custom Form Fields</h3>
-
-          <div className="grid md:grid-cols-2 gap-3">
-            <input type="text" name="label" placeholder="Field Label" className="p-2 border rounded" value={newField.label} onChange={handleNewFieldChange} />
-            <input type="text" name="name" placeholder="Field Name (unique)" className="p-2 border rounded" value={newField.name} onChange={handleNewFieldChange} />
-            <select name="type" className="p-2 border rounded" value={newField.type} onChange={handleNewFieldChange}>
-              {fieldTypes.map(type => <option key={type} value={type}>{type}</option>)}
-            </select>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" name="required" checked={newField.required} onChange={handleNewFieldChange} />
-              <span>Required?</span>
-            </label>
+    <div className="min-h-screen bg-gradient-to-br from-teal-700 to-cyan-800 flex flex-col items-center justify-center text-white px-4 py-10">
+      <div className="max-w-5xl w-full bg-white text-gray-800 shadow-2xl rounded-3xl p-8 transform transition duration-300 ">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 space-y-4 sm:space-y-0">
+          <div className="flex items-center gap-4">
+            {/* Using a placeholder image for the logo */}
+            <img
+              src="https://placehold.co/48x48/0F4C4C/FFFFFF?text=IM"
+              alt="Indocs Mails Logo"
+              className="h-12 w-12 rounded-full shadow-lg border-2 border-teal-500"
+              onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/48x48/E2E8F0/64748B?text=Logo"; e.target.alt="Logo failed to load"; }}
+            />
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800">
+                Welcome, {user?.firstName || "Developer"} 🎉
+              </h1>
+              <p className="text-sm text-gray-600 mt-1">Your email: {user?.email || "N/A"}</p>
+            </div>
           </div>
-
-          <button type="button" onClick={addField} className="mt-3 bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700">
-            ➕ Add Field
-          </button>
-
-          {/* Show added fields */}
-          <ul className="mt-4 space-y-2">
-            {customFields.map((field, index) => (
-              <li key={index} className="p-2 bg-gray-100 rounded flex justify-between items-center">
-                <span>{field.label} ({field.type}) {field.required && '*'}</span>
-                <button type="button" onClick={() => removeField(index)} className="text-red-600 hover:underline">Remove</button>
-              </li>
-            ))}
-          </ul>
         </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full ${loading ? 'bg-gray-400' : 'bg-[#0c52a2] hover:bg-[#083d7a]'} text-white py-2 rounded`}
-        >
-          {loading ? 'Saving...' : 'Save Configuration'}
-        </button>
+        {/* Main Content Area: API Key, API Usage, and Developer Feedback */}
+        <div className="flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0">
+          {/* Left Column: API Key and API Usage Instructions */}
+          <div className="flex flex-col lg:w-2/3 space-y-8">
+            {/* API Key Section */}
+            <div className="p-6 bg-blue-50 rounded-2xl border border-blue-200 shadow-inner">
+              <h2 className="text-xl font-semibold text-blue-800 mb-3 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a3 3 0 016 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clipRule="evenodd"></path></svg>
+                Your API Key
+              </h2>
+              <div className="bg-gray-100 p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between mt-2 space-y-3 sm:space-y-0 sm:space-x-4">
+                <code className="font-mono text-base text-gray-700 truncate break-all w-full sm:w-auto flex-grow px-3 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
+                  {showKey ? apiKey : "****************************************"}
+                </code>
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <button
+                    onClick={() => setShowKey(!showKey)}
+                    className="flex-1 sm:flex-none text-blue-700 text-sm font-medium hover:underline px-4 py-2 rounded-lg transition duration-200 hover:bg-blue-100"
+                  >
+                    {showKey ? "Hide" : "Show"}
+                  </button>
+                  <button
+                    onClick={handleCopyApiKey}
+                    className="flex-1 sm:flex-none text-sm bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold shadow-md transition duration-200 flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
 
-        {/* Response Message */}
-        {responseMsg && <p className="text-center mt-2 font-medium">{responseMsg}</p>}
-      </form>
-      <form action="/api/auth/signout" method="post" className="mt-8">
+            {/* API Usage Instructions */}
+            <div className="p-6 bg-gray-50 rounded-2xl border border-gray-200 shadow-inner">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.638.162l4 2.5a1 1 0 010 1.676l-4 2.5a1 1 0 01-1.3-.162l-4-2.5a1 1 0 010-1.676l4-2.5a1 1 0 01.638-.162zM4.316 9.051a1 1 0 01.638.162l4 2.5a1 1 0 010 1.676l-4 2.5a1 1 0 01-1.3-.162l-4-2.5a1 1 0 010-1.676l4-2.5a1 1 0 01.638-.162z" clipRule="evenodd"></path></svg>
+                About This API
+              </h2>
+
+              <div className="leading-relaxed space-y-4 text-gray-700 text-sm">
+                <p className="flex items-start">
+                  <span className="mr-2 mt-0.5 text-blue-600 font-bold">1.</span>
+                  <span className="font-medium">
+                    Want to know more about indocs mails and AI integration? Read our summaries blogs
+                    <a
+                      href="/blogs"
+                      className="text-blue-600 underline hover:text-blue-800 ml-1 font-semibold"
+                    >
+                      Our latest blogs
+                    </a>
+                    .
+                  </span>
+                </p>
+
+                <p className="flex items-start">
+                  <span className="mr-2 mt-0.5 text-blue-600 font-bold">2.</span>
+                  <span className="font-medium">
+                    Make a <code className="bg-gray-200 px-1.5 py-0.5 rounded text-xs font-mono">POST</code> request to the API endpoint:
+                  </span>
+                </p>
+                <code className="block bg-white p-3 rounded-md font-mono text-blue-700 break-all border border-gray-200 shadow-sm">
+                  https://indocsmails.onrender.com/send-email
+                </code>
+
+                <p className="flex items-start">
+                  <span className="mr-2 mt-0.5 text-blue-600 font-bold">3.</span>
+                  <span className="font-medium">
+                    Include your API key in the request header:
+                  </span>
+                </p>
+                <code className="block bg-white p-3 rounded-md font-mono text-green-700 break-all border border-gray-200 shadow-sm">
+                  x-api-key: <span className="text-gray-600">{"<YOUR_API_KEY_HERE>"}</span>
+                </code>
+
+                <p className="flex items-start">
+                  <span className="mr-2 mt-0.5 text-blue-600 font-bold">4.</span>
+                  <span className="font-medium">
+                    Send the form data as <code className="bg-gray-200 px-1.5 py-0.5 rounded text-xs font-mono">multipart/form-data</code>. The fields will dynamically match what you configured in the Control Panel. Common fields include:
+                  </span>
+                </p>
+                <ul className="list-disc ml-8 text-gray-600 space-y-1">
+                  <li><code className="font-mono">name</code> (e.g., "John Doe")</li>
+                  <li><code className="font-mono">email</code> (e.g., "john.doe@example.com")</li>
+                  <li><code className="font-mono">message</code> (your message content)</li>
+                  <li><code className="font-mono">logo</code> (optional file upload)</li>
+                  {/* Other dynamically configured fields will also be expected */}
+                </ul>
+                <p className="font-medium mt-4">
+                  Upon successful submission, an email will be sent as configured in your Control Panel.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Developer Feedback Section */}
+          {/* <div className="flex flex-col lg:w-1/3 space-y-8">
+            <div className="p-6 bg-purple-50 rounded-2xl border border-purple-200 shadow-inner">
+              <h2 className="text-xl font-semibold text-purple-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5L6 11H5a1 1 0 100 2h1a1 1 0 00.867.5L10 9h1a1 1 0 100-2h-1z" clipRule="evenodd"></path></svg>
+                Developer Feedback
+              </h2>
+              <textarea
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out mb-4 resize-y"
+                rows="6"
+                placeholder="Share your problems, solutions, suggestions, or any other feedback here..."
+                value={feedbackText}
+                onChange={(e) => setFeedbackText(e.target.value)}
+                disabled={isSendingFeedback}
+              ></textarea>
+              <button
+                onClick={handleSendFeedback}
+                disabled={isSendingFeedback}
+                className={`w-full font-semibold py-3 px-6 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2 ${
+                  isSendingFeedback
+                    ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                    : "bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white"
+                }`}
+              >
+                {isSendingFeedback ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Sending Feedback...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+                    <span>Send Feedback</span>
+                  </>
+                )}
+              </button>
+              {feedbackResponse && (
+                <div className={`mt-4 px-4 py-2 rounded-lg text-sm font-medium border ${
+                  feedbackResponse.type === 'success' ? 'bg-green-100 text-green-700 border-green-300' : 'bg-red-100 text-red-700 border-red-300'
+                }`}>
+                  {feedbackResponse.text}
+                </div>
+              )}
+
+              
+            </div>
+          </div> */}
+        </div>
+
+        {/* Logout Button */}
+        <form action="/api/auth/signout" method="post" className="mt-8 flex justify-center mb-2">
           <button
-            type="submit"
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold transition shadow-lg"
-          >
-            Logout
-          </button>
+  type="submit"
+  className="flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-semibold shadow-md hover:bg-red-700 transition duration-200"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+  </svg>
+  Logout
+</button>
+
         </form>
-    </main>
+      </div>
+    </div>
   );
 }

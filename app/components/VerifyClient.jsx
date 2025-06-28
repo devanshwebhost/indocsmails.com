@@ -3,16 +3,16 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function VerifyEmail() {
+export default function VerifyClient() {
   const params = useSearchParams();
   const router = useRouter();
-
   const [status, setStatus] = useState('Verifying your email...');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = params.get('token');
+    const token = params.get('token'); // ✅ declare it here
+
     if (!token) {
       setStatus('❌ Invalid or missing verification token.');
       setLoading(false);
@@ -44,7 +44,7 @@ export default function VerifyEmail() {
     };
 
     verifyEmail();
-  }, [token, router]);
+  }, [params, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
