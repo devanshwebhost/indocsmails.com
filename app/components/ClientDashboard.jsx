@@ -150,6 +150,14 @@ export default function Home() {
         {/* Response Message */}
         {responseMsg && <p className="text-center mt-2 font-medium">{responseMsg}</p>}
       </form>
+      <form action="/api/auth/signout" method="post" className="mt-8">
+          <button
+            type="submit"
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold transition shadow-lg"
+          >
+            Logout
+          </button>
+        </form>
     </main>
   );
 }
