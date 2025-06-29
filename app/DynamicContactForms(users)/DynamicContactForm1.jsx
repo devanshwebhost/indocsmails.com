@@ -98,9 +98,9 @@ export default function DynamicContactForm1({ user }) {
   };
 
   return (
-    <div className="min-h-screen w-[70%] py-10 px-4 flex flex-col items-center justify-center">
+    <div className="md:min-h-screen md:w-[70%] md:py-10 px-4 flex flex-col items-center justify-center">
       <div className="w-full max-w-xl bg-white p-8 rounded-3xl shadow-2xl border border-gray-200 animate-fade-in">
-        <h1 className="text-2xl font-extrabold text-center text-blue-700 tracking-wide mb-6 pb-4 border-b-4 border-blue-300 transform transition duration-300 hover:scale-105">
+        <h1 className="mb:text-2xl font-extrabold text-center text-black tracking-wide mb-6 pb-4 border-b-4 border-green-900 transform transition duration-300 hover:scale-105">
           Live Form Preview 👁️
         </h1>
 

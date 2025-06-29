@@ -5,7 +5,7 @@ import React from 'react';
 // The content mirrors the HTML structure previously provided for documentation.
 export default function ApiDocumentation() {
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-3xl shadow-2xl max-w-4xl mx-auto my-10 border border-blue-200">
+    <div className="w-[100%] md:w-auto bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-3xl shadow-2xl max-w-4xl mx-auto md:my-10 border border-blue-200">
     <h2 className="text-2xl font-extrabold text-center text-blue-700 mb-8 pb-4 border-b-4 border-blue-300 transform transition duration-300">
         API Documentation 🚀
       </h2>

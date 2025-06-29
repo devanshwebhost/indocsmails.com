@@ -184,7 +184,8 @@ export function Feedback() {
       <div id="response" className="mt-3 text-center font-bold">
         {responseMessage}
       </div>
-
+      
+      <div>This site is  <span className='text-red-600'>under development</span> Give your Suggestions! <span className='text-green-500'>API is working very well👌</span><br/> !! Happy Coding 😊!!</div>
       <style>{`
         .form-container {
           max-width: 600px;

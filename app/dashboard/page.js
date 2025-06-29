@@ -27,15 +27,15 @@ export default async function Page() {
   const user = await User.findOne({ email: session.user.email }).lean();
 
   return (
-  <div className=" overflow-hidden min-h-screen bg-gradient-to-br from-teal-700 to-cyan-800 flex flex-col items-center justify-center px-4 py-10">
+  <div className=" overflow-hidden min-h-screen bg-gradient-to-br from-teal-700 to-cyan-800 flex flex-col items-center py-5 justify-center mb:py-10">
     <ClientDashboard user={user} />
-    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen px-4 py-10 gap-6">
+    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen py-2 md:py-10 gap-6">
     <ControlPanelClient user={user} />
     <DynamicContactForm1 user={user} />
     </div>
-    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen px-4 py-10 gap-6">
+    <div className="w-[100%] md:w-auto flex flex-col md:flex-row items-center justify-center min-h-screen md:py-5" >
     <CodePreviewer defaultLanguage="html" />
-    <ApiDocumentation/>
+    {/* <ApiDocumentation/> */}
     </div>
 
   </div>

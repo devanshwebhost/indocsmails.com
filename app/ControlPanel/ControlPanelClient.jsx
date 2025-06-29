@@ -111,13 +111,13 @@ const [formData, setFormData] = useState({
     }
   };
   return (
-    <main className="min-h-screen w-full flex items-center justify-center px-4 py-10">
+    <main className="min-h-screen w-full flex items-center justify-center md:px-4 md:py-10">
       <form
         onSubmit={handleSubmit}
-        className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-8 space-y-7 animate-fade-in border border-gray-200"
+        className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-6 sm:p-8 space-y-7 animate-fade-in border border-gray-200"
       >
-        <h1 className="text-2xl font-extrabold text-center text-blue-700 tracking-wide mb-6 pb-4 border-b-4 border-blue-300 transform transition duration-300 hover:scale-105">
-          Indocs Mail Control Panel ⚙️
+        <h1 className="text-2xl font-extrabold text-center text-black tracking-wide mb-6 pb-4 border-b-4 border-green-900 transform transition duration-300 ">
+          Your Mails Control Panel ⚙️
         </h1>
 
         {/* Basic Config */}
@@ -165,7 +165,7 @@ const [formData, setFormData] = useState({
           <input
             type="file"
             accept="image/*"
-            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 transition duration-200 ease-in-out"
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white "
             onChange={handleLogoChange}
           />
           {logo && <p className="text-xs text-gray-500 mt-2">Selected: {logo.name}</p>}
@@ -175,7 +175,7 @@ const [formData, setFormData] = useState({
         <section className="border-t border-gray-200 pt-7">
           <h2 className="text-2xl font-bold mb-4 text-gray-800 flex items-center">
             {/* Replaced FaPlus with inline SVG */}
-            <svg className="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
+            <svg className="w-6 h-6 mr-2 text-green-900" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
             Custom Form Fields
           </h2>
 
@@ -221,7 +221,7 @@ const [formData, setFormData] = useState({
           <button
             type="button"
             onClick={addField}
-            className="w-full bg-green-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2"
+            className="w-full bg-green-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md bg-gradient-to-tr from-cyan-800 to-teal-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out transform  flex items-center justify-center space-x-2"
           >
             {/* Replaced FaPlus with inline SVG */}
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
@@ -243,7 +243,7 @@ const [formData, setFormData] = useState({
                   <button
                     type="button"
                     onClick={() => removeField(index)}
-                    className="text-red-500 hover:text-red-700 transition duration-200 ease-in-out transform hover:scale-110 p-2 rounded-full hover:bg-red-100"
+                    className="text-red-500 hover:text-red-700 transition duration-200 ease-in-out transform  p-2 rounded-full hover:bg-red-100"
                     title="Remove Field"
                   >
                     {/* Replaced FaTrash with inline SVG */}
@@ -262,7 +262,7 @@ const [formData, setFormData] = useState({
           className={`w-full font-semibold py-3 px-6 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2 ${
             loading
               ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white"
+              : "bg-gradient-to-tr from-cyan-800 to-teal-700 active:bg-blue-800 text-white"
           }`}
         >
           {loading ? (

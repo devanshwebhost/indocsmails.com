@@ -82,11 +82,11 @@ const Home = () => {
     };
 
     return (
-        <article className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 sm:p-6 lg:p-8 font-sans text-gray-800 rounded-lg shadow-xl m-2">
+        <article className="min-h-screen bg-gradient-to-br from-teal-700 to-cyan-800 p-4 sm:p-6 lg:p-8 font-sans text-gray-800 rounded-lg shadow-xl m-2">
             {/* Blog Post Header */}
             <header className="text-center mb-10 p-6 bg-white rounded-xl shadow-lg">
-                <h1 className="text-xl sm:text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4 leading-tight">
-                    🚀 Learn Email APIs for Your Internal Communications & Beyond with ⚡Indocs Mails
+                <h1 className="text-xl sm:text-4xl lg:text-3xl font-extrabold text-indigo-700 mb-4 leading-tight">
+                    🚀 Learn Email APIs for Your Internal Communications & Beyond with <br/> ⚡Indocs Mails
                 </h1>
                 <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
                     Learn how to easily send automated emails from Python, Node.js, Java & more using powerful Email APIs.
@@ -96,7 +96,7 @@ const Home = () => {
 
             {/* Main Content Sections */}
             <section className="bg-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg mb-10 max-w-4xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl font-bold text-purple-700 mb-6">
+                <h2 className="text-xl sm:text-3xl font-bold text-purple-700 mb-6">
                     What is an Email API and Why Do You Need One? 📧
                 </h2>
                 <p className="mb-4 leading-relaxed">
@@ -114,7 +114,7 @@ const Home = () => {
 
             {/* Language-Specific Guides */}
             <section className="bg-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg mb-10 max-w-4xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl font-bold text-purple-700 mb-6">
+                <h2 className="text-xl sm:text-3xl font-bold text-purple-700 mb-6">
                     Sending Emails Programmatically: A Language-by-Language Guide 💻
                 </h2>
 
@@ -148,7 +148,7 @@ const Home = () => {
 
             {/* Email APIs for Internal Communications */}
             <section className="bg-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg mb-10 max-w-4xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl font-bold text-purple-700 mb-6">
+                <h2 className="text-xl sm:text-3xl font-bold text-purple-700 mb-6">
                     Email APIs for Internal Communications: Beyond the Basics 🏢
                 </h2>
                 <p className="mb-4 leading-relaxed">
@@ -163,14 +163,14 @@ const Home = () => {
                     <li>**Team Notifications:** Automate project updates, task assignments, or internal announcements to ensure everyone is on the same page.</li>
                 </ul>
                 <p className="leading-relaxed">
-                    Leveraging a <span className="font-semibold text-indigo-600">transactional email API</span> for these internal use cases ensures consistency, trackability, and reduces manual effort,
+                    Leveraging a <a className="font-semibold text-indigo-600" href='/'>transactional email API</a> for these internal use cases ensures consistency, trackability, and reduces manual effort,
                     leading to a more efficient and informed workforce.
                 </p>
             </section>
 
             {/* Choosing the Right Email API */}
             <section className="bg-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg mb-10 max-w-4xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl font-bold text-purple-700 mb-6">
+                <h2 className="text-xl sm:text-3xl font-bold text-purple-700 mb-6">
                     Choosing the Right Email API: Key Considerations 💡
                 </h2>
                 <p className="mb-4 leading-relaxed">
@@ -211,7 +211,7 @@ const Home = () => {
 
             {/* Frequently Asked Questions (FAQ) */}
             <section className="bg-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg mb-10 max-w-4xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl font-bold text-purple-700 mb-6">
+                <h2 className="text-xl sm:text-3xl font-bold text-purple-700 mb-6">
                     Frequently Asked Questions (FAQs) 🤔
                 </h2>
 
@@ -297,8 +297,9 @@ const Home = () => {
             </section>
 
             {/* Ask Gemini Chat Section */}
-            <section className="bg-indigo-700 p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg max-w-4xl mx-auto text-white">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center">
+            
+            <section className="bg-indigo-700 p-2 md:p-6 sm:p-8 lg:p-10 md:rounded-xl shadow-lg md:m-auto w-[100%] md:max-w-4xl text-white">
+                <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
                     Got More Questions? Ask Gemini! 🤖
                 </h2>
                 <p className="text-center mb-6 leading-relaxed">
@@ -352,7 +353,7 @@ const Home = () => {
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
                             ) : (
-                                "Send"
+                                "📤"
                             )}
                         </button>
                     </div>
@@ -372,11 +373,12 @@ const Home = () => {
                 </p>
                 <a
                     href="/" // Placeholder for a real "explore APIs" link
-                    className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
+                    className="inline-block bg-gradient-to-tr from-cyan-800 to-teal-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform "
                 >
                     Explore Email API Solutions
                 </a>
             </footer>
+
         </article>
     );
 };

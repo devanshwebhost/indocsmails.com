@@ -439,6 +439,7 @@ FORM_TEMPLATE = """
 </html>
 """
 
+
 @app.route('/')
 def index():
     config = MOCK_CONFIG.get('config', {})
@@ -596,114 +597,276 @@ export default function CodePreviewer() {
 
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-3xl shadow-2xl max-w-4xl mx-auto my-10 border border-blue-200">
-      <h2 className="text-2xl font-extrabold text-center text-blue-700 mb-8 pb-4 border-b-4 border-blue-300 transform transition duration-300">
-        Ready-to-Use Code Snippets ✨
-      </h2>
+    <div className=" w-[100%] md:w-auto bg-gradient-to-br from-blue-50 to-blue-100 p-4 sm:p-6 rounded-3xl shadow-2xl max-w-4xl mx-auto my-6 sm:my-10 border border-blue-200">
+  <h2 className="text-xl sm:text-2xl font-extrabold text-center text-green-700 mb-6 sm:mb-8 pb-4 border-b-4 border-green-900 transition duration-300">
+    Ready-to-Use Code Snippets ✨
+  </h2>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
-        {/* Language Selector */}
-        <select
-          className="flex-grow w-full sm:w-auto border border-blue-400 p-3 rounded-xl bg-white text-blue-800 text-base shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out cursor-pointer"
-          value={language}
-          onChange={(e) => {
-            setLanguage(e.target.value);
-            setGeminiAnswer(''); // Clear answer when language changes
-            setShowQuestionInput(false); // Hide question input
-          }}
-        >
-          <option value="html">HTML</option>
-          <option value="react">React</option>
-          <option value="python">Python</option>
-        </select>
+  {/* Controls */}
+  <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
+    <select
+      className="w-full sm:w-auto border border-green-400 p-3 rounded-xl bg-white text-green-800 text-base shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 cursor-pointer"
+      value={language}
+      onChange={(e) => {
+        setLanguage(e.target.value);
+        setGeminiAnswer('');
+        setShowQuestionInput(false);
+      }}
+    >
+      <option value="html">HTML</option>
+      <option value="react">React</option>
+      <option value="python">Python</option>
+    </select>
 
-        {/* Action Buttons */}
-        <div className="flex w-full sm:w-auto space-x-4">
-          <button
-            onClick={handleCopy}
-            className="flex-1 sm:flex-none bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2"
-          >
-            {copied ? (
-              <>
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                <span>Copied!</span>
-              </>
-            ) : (
-              <>
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
-                <span>Copy Code</span>
-              </>
-            )}
-          </button>
-          <button
-            onClick={() => {
-              setShowQuestionInput(prev => !prev); // Toggle visibility
-              setGeminiAnswer(''); // Clear previous answer
-              setUserQuestion(''); // Clear previous question
-            }}
-            className="flex-1 sm:flex-none bg-purple-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-purple-700 active:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5L6 11H5a1 1 0 100 2h1a1 1 0 00.867.5L10 9h1a1 1 0 100-2h-1z" clipRule="evenodd"></path></svg>
-            <span>Ask a Question</span>
-          </button>
-        </div>
-      </div>
+    <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
+      <button
+        onClick={handleCopy}
+        className="w-full sm:w-auto bg-gradient-to-tr from-cyan-800 to-teal-700 text-white text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 flex items-center justify-center gap-2"
+      >
+        {copied ? (
+          <>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+            <span>Copied!</span>
+          </>
+        ) : (
+          <>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
+            <span>Copy Code</span>
+          </>
+        )}
+      </button>
 
-      {/* Code Preview Area - Now using <pre><code> for raw code display */}
-      <div className="rounded-2xl overflow-auto shadow-xl border border-gray-300 bg-gray-900 text-gray-200" style={{maxHeight: '500px'}}>
-        <pre className="p-6 text-sm leading-relaxed" style={{ fontFamily: 'Fira Code, monospace', whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
-          <code>
-            {sampleCodes[language]}
-          </code>
-        </pre>
-      </div>
+      <button
+        onClick={() => {
+          setShowQuestionInput(prev => !prev);
+          setGeminiAnswer('');
+          setUserQuestion('');
+        }}
+        className="w-full sm:w-auto bg-purple-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-purple-700 active:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200 flex items-center justify-center gap-2"
+      >
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5L6 11H5a1 1 0 100 2h1a1 1 0 00.867.5L10 9h1a1 1 0 100-2h-1z" clipRule="evenodd"></path></svg>
+        <span>Ask a Question</span>
+      </button>
+    </div>
+  </div>
 
-      {/* Question and Answer Section */}
-      {showQuestionInput && (
-        <div className="mt-8 p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
-          <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <svg className="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9.247a1.25 1.25 0 00-1.242 1.242l1.242 1.242a1.25 1.25 0 001.242-1.242l-1.242-1.242zm0 0L21 3m-12 9v5h5"></path></svg>
-            Ask Gemini about the Code
-          </h3>
-          <textarea
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out mb-4"
-            rows="4"
-            placeholder="Type your question about the code here (e.g., 'What does the handleSubmit function do?', 'How can I add validation to this form?')"
-            value={userQuestion}
-            onChange={(e) => setUserQuestion(e.target.value)}
-            disabled={isAnswering}
-          ></textarea>
-          <button
-            onClick={handleAskQuestion}
-            disabled={isAnswering}
-            className={`w-full bg-purple-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md ${isAnswering ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700 active:bg-purple-800'} focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2`}
-          >
-            {isAnswering ? (
-              <>
-                <svg className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Getting Answer...</span>
-              </>
-            ) : (
-              <>
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM8 9H7a1 1 0 000 2h1a1 1 0 100-2zm6 0h-1a1 1 0 100 2h1a1 1 0 100-2zm-3 0h-1a1 1 0 100 2h1a1 1 0 100-2z" clipRule="evenodd"></path></svg>
-                <span>Submit Question</span>
-              </>
-            )}
-          </button>
+  {/* Code Block */}
+  <div className="rounded-2xl overflow-x-auto shadow-xl border border-gray-300 bg-gray-900 text-gray-200 max-h-[500px]">
+    <pre className="p-4 sm:p-6 text-sm leading-relaxed" style={{ fontFamily: 'Fira Code, monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+      <code>{sampleCodes[language]}</code>
+    </pre>
+  </div>
 
-          {geminiAnswer && (
-            <div className="mt-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
-              <h4 className="text-lg font-semibold text-purple-800 mb-2">Gemini's Answer:</h4>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{geminiAnswer}</p>
-            </div>
-          )}
+  {/* Question Input */}
+  {showQuestionInput && (
+    <div className="mt-8 p-4 sm:p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+      <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center">
+        <svg className="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9.247a1.25 1.25 0 00-1.242 1.242l1.242 1.242a1.25 1.25 0 001.242-1.242l-1.242-1.242zm0 0L21 3m-12 9v5h5"></path></svg>
+        Ask Gemini about the Code
+      </h3>
+
+      <textarea
+        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent mb-4"
+        rows="4"
+        placeholder="Ask about the code (e.g., 'How to validate input?')"
+        value={userQuestion}
+        onChange={(e) => setUserQuestion(e.target.value)}
+        disabled={isAnswering}
+      ></textarea>
+
+      <button
+        onClick={handleAskQuestion}
+        disabled={isAnswering}
+        className={`w-full bg-purple-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md ${isAnswering ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700 active:bg-purple-800'} focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200 flex items-center justify-center gap-2`}
+      >
+        {isAnswering ? (
+          <>
+            <svg className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Getting Answer...</span>
+          </>
+        ) : (
+          <>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM8 9H7a1 1 0 000 2h1a1 1 0 100-2zm6 0h-1a1 1 0 100 2h1a1 1 0 100-2zm-3 0h-1a1 1 0 100 2h1a1 1 0 100-2z" clipRule="evenodd"></path></svg>
+            <span>Submit Question</span>
+          </>
+        )}
+      </button>
+
+      {geminiAnswer && (
+        <div className="mt-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
+          <h4 className="text-lg font-semibold text-purple-800 mb-2">Gemini's Answer:</h4>
+          <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{geminiAnswer}</p>
         </div>
       )}
-
     </div>
+  )}
+  <div className="w-[100%] md:w-auto bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-3xl shadow-2xl max-w-4xl mx-auto md:my-10 border border-blue-200">
+    <h2 className="text-2xl font-extrabold text-center text-green-700 mb-8 pb-4 border-b-4 border-blue-300 transform transition duration-300">
+        API Documentation 🚀
+      </h2>
+    <div className="rounded-2xl overflow-auto shadow-xl border border-gray-300 p-2 text-gray-200" style={{maxHeight: '500px'}}>
+      {/* Overview Section */}
+      
+      <section className="">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0l-5.25 5.25M21 3h-6.75"></path></svg>
+          Overview
+        </h3>
+        <p className="text-gray-700 leading-relaxed">
+          This documentation outlines the usage of the dynamic contact form API endpoint. It allows you to submit form data, including files, to an external service for email handling.
+        </p>
+      </section>
+
+      {/* API Endpoint Section */}
+      <section className="mb-8">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M12 5l7 7-7 7"></path></svg>
+          API Endpoint
+        </h3>
+        <ul className="list-disc pl-5 text-gray-700">
+          <li className="mb-2">
+            <strong>Base URL:</strong> <code className="bg-gray-200 p-1 rounded">https://indocsmails.onrender.com</code>
+          </li>
+          <li className="mb-2">
+            <strong>Config Endpoint:</strong> <code className="bg-gray-200 p-1 rounded">/config.json/{"{Your_API_KEY}"}</code>
+            <p className="text-sm text-gray-600 ml-4">Retrieves the dynamic form fields configuration.</p>
+          </li>
+          <li>
+            <strong>Submission Endpoint:</strong> <code className="bg-gray-200 p-1 rounded">/send-email</code>
+            <p className="text-sm text-gray-600 ml-4">Used for submitting form data and attachments.</p>
+          </li>
+        </ul>
+      </section>
+
+      {/* Authentication Section */}
+      <section className="mb-8">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2v5a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2h6z"></path></svg>
+          Authentication (API Key)
+        </h3>
+        <p className="text-gray-700 leading-relaxed mb-3">
+          Authentication is done via an API key, which must be included in the request headers for submissions, and as part of the URL for config requests.
+        </p>
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded" role="alert">
+          <p className="font-bold">Important Security Note:</p>
+          <p className="text-sm">
+            For client-side code (HTML/React), exposing your API key directly in the frontend can be a security risk. For production applications, it's highly recommended to proxy requests through your own backend server to keep the API key secure.
+          </p>
+        </div>
+      </section>
+
+      {/* Submit Form Data Section */}
+      <section className="mb-8">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          Submit Form Data (<code className="bg-gray-200 p-1 rounded">POST /send-email</code>)
+        </h3>
+        <p className="text-gray-700 mb-2">
+          This endpoint accepts <code className="bg-gray-200 p-1 rounded">multipart/form-data</code>.
+        </p>
+        <h4 className="text-xl font-semibold text-gray-700 mt-4 mb-2">Headers:</h4>
+        <ul className="list-disc pl-5 text-gray-700 mb-4">
+          <li><code className="bg-gray-200 p-1 rounded">Content-Type: multipart/form-data</code> (automatically set by browsers for FormData / Flask's request handling for file uploads)</li>
+          <li><code className="bg-gray-200 p-1 rounded">x-api-key: {"{Your_API_KEY}"}</code> (<strong>Required</strong>)</li>
+        </ul>
+
+        <h4 className="text-xl font-semibold text-gray-700 mt-4 mb-2">Request Body (Form Data):</h4>
+        <p className="text-gray-700 mb-2">
+          The form fields are dynamic and determined by the <code className="bg-gray-200 p-1 rounded">/config.json</code> endpoint.
+          Common fields typically include:
+        </p>
+        <ul className="list-disc pl-5 text-gray-700">
+          <li><code className="bg-gray-200 p-1 rounded">name</code> (text)</li>
+          <li><code className="bg-gray-200 p-1 rounded">email</code> (email)</li>
+          <li><code className="bg-gray-200 p-1 rounded">subject</code> (text)</li>
+          <li><code className="bg-gray-200 p-1 rounded">message</code> (text/textarea)</li>
+          <li><code className="bg-gray-200 p-1 rounded">attachment</code> (file, if configured)</li>
+          {/* Add more based on your config.json structure */}
+        </ul>
+
+        <h4 className="text-xl font-semibold text-gray-700 mt-4 mb-2">Success Response (HTTP 200 OK):</h4>
+        <pre className="bg-gray-900 text-white p-3 rounded-lg overflow-x-auto text-sm"><code>{`{
+    "success": true,
+    "message": "Email sent successfully!"
+}`}</code></pre>
+
+        <h4 className="text-xl font-semibold text-gray-700 mt-4 mb-2">Error Response (HTTP 400 Bad Request / 500 Internal Server Error):</h4>
+        <pre className="bg-gray-900 text-white p-3 rounded-lg overflow-x-auto text-sm"><code>{`{
+    "success": false,
+    "error": "Error message details (e.g., 'Missing API Key', 'Invalid input')"
+}`}</code></pre>
+      </section>
+
+      {/* How to Use This Template in Your Code Section */}
+      <section className="mb-8">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          How to Use This Template in Your Code
+        </h3>
+        <p className="text-gray-700 mb-3">
+          The provided code snippets (HTML, React, Python) already incorporate the logic to interact with this API. The key is to correctly set the <code className="bg-gray-200 p-1 rounded">apiBase</code> and <code className="bg-gray-200 p-1 rounded">apiKey</code> variables.
+        </p>
+
+        <div className="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <h4 className="text-xl font-semibold text-green-700 mb-2">1. HTML Example:</h4>
+          <p className="text-gray-700 mb-2">
+            In your HTML file, locate the <code className="bg-gray-200 p-1 rounded">&lt;script&gt;</code> block and ensure these lines are correctly set:
+          </p>
+          <pre className="bg-gray-900 text-white p-3 rounded-lg overflow-x-auto text-sm"><code>{`
+<script>
+  const apiBase = "https://indocsmails.onrender.com";
+  const apiKey = "Your_API_KEY"; // <-- ✅ Replace with your actual API key!
+
+  // ... rest of the loadForm() and event listener logic
+</script>`}</code></pre>
+          <p className="text-gray-700 mt-2">
+            The <code className="bg-gray-200 p-1 rounded">fetch</code> calls inside <code className="bg-gray-200 p-1 rounded">loadForm()</code> and the <code className="bg-gray-200 p-1 rounded">submit</code> event listener use these variables.
+          </p>
+        </div>
+
+        <div className="mb-6 bg-green-50 p-4 rounded-lg border border-green-200">
+          <h4 className="text-xl font-semibold text-green-700 mb-2">2. React Example:</h4>
+          <p className="text-gray-700 mb-2">
+            In your `DynamicContactFormReact` component, ensure these constants are defined at the top of the component file (or passed as props/context in larger applications):
+          </p>
+          <pre className="bg-gray-900 text-white p-3 rounded-lg overflow-x-auto text-sm"><code>{`
+const apiBase = "https://indocsmails.onrender.com";
+const apiKey = "Your_API_KEY"; // <-- ✅ Replace with your actual API key!
+
+export function DynamicContactFormReact() {
+  // ... rest of the component logic (useState, useEffect, handleChange, handleSubmit)
+}`}</code></pre>
+          <p className="text-gray-700 mt-2">
+            The <code className="bg-gray-200 p-1 rounded">fetch</code> calls within the <code className="bg-gray-200 p-1 rounded">useEffect</code> and <code className="bg-gray-200 p-1 rounded">handleSubmit</code> function will automatically use these constants.
+          </p>
+        </div>
+
+        <div className="mb-6 bg-purple-50 p-4 rounded-lg border border-purple-200">
+          <h4 className="text-xl font-semibold text-purple-700 mb-2">3. Python (Flask) Example:</h4>
+          <p className="text-gray-700 mb-2">
+            In your `app.py` Flask file, locate and set the following constants:
+          </p>
+          <pre className="bg-gray-900 text-white p-3 rounded-lg overflow-x-auto text-sm"><code>{`
+API_BASE = "https://indocsmails.onrender.com"
+API_KEY = "Your_API_KEY" # <-- ✅ Replace with your actual API key!
+
+# ... rest of your Flask app routes and logic`}</code></pre>
+          <p className="text-gray-700 mt-2">
+            The <code className="bg-gray-200 p-1 rounded">requests.post</code> call in the <code className="bg-gray-200 p-1 rounded">/submit-form</code> route uses these for interaction.
+          </p>
+        </div>
+
+        <p className="text-gray-700 mt-5 leading-relaxed">
+          Remember to always replace <code className="bg-gray-200 p-1 rounded">"Your_API_KEY"</code> with your actual API key for the form to function correctly. Happy coding! 💻
+        </p>
+      </section>
+    </div>
+    </div>
+</div>
+
   );
 }
 
