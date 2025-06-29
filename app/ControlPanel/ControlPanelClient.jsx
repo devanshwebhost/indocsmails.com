@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify'; // Assuming toast is available for notifications
 
 export default function ControlPanelClient({ user }) {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     ownerEmail: '',
     appPassword: '',
     adminEmail: '',
@@ -15,7 +15,6 @@ export default function ControlPanelClient({ user }) {
   const [responseMsg, setResponseMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Custom field builder state
   const [customFields, setCustomFields] = useState([]);
   const [newField, setNewField] = useState({
     type: 'text',
@@ -28,82 +27,91 @@ export default function ControlPanelClient({ user }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleNewFieldChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setNewField(prev => ({
+    setNewField((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const addField = () => {
-    if (!newField.label || !newField.name) return alert('Label and Name required');
-    setCustomFields(prev => [...prev, newField]);
+    if (!newField.label || !newField.name) {
+      toast.error('Label and Name are required for new fields! 🏷️');
+      return;
+    }
+    setCustomFields((prev) => [...prev, newField]);
     setNewField({ type: 'text', label: '', name: '', required: false });
+    toast.success('Field added successfully! ✨');
   };
 
   const removeField = (index) => {
-    setCustomFields(prev => prev.filter((_, i) => i !== index));
+    setCustomFields((prev) => prev.filter((_, i) => i !== index));
+    toast.info('Field removed. 🗑️');
   };
 
   const handleLogoChange = (e) => {
     setLogo(e.target.files[0]);
+    if (e.target.files[0]) {
+      toast.success(`Logo selected: ${e.target.files[0].name} 👍`);
+    }
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setResponseMsg('');
+    e.preventDefault();
+    setLoading(true);
+    setResponseMsg('');
 
-  const form = new FormData();
-  form.append('ownerEmail', formData.ownerEmail);
-  form.append('appPassword', formData.appPassword);
-  form.append('adminEmail', formData.adminEmail);
-  form.append('replyMessage', formData.replyMessage);
-  form.append('fields', JSON.stringify(customFields));
-  if (logo) form.append('logo', logo);
+    const form = new FormData();
+    form.append('ownerEmail', formData.ownerEmail);
+    form.append('appPassword', formData.appPassword);
+    form.append('adminEmail', formData.adminEmail);
+    form.append('replyMessage', formData.replyMessage);
+    form.append('fields', JSON.stringify(customFields));
+    if (logo) form.append('logo', logo);
 
-  // ✅ Replace this with however you get user data
-  const apiKey = user?.apiKey; // or from session/state/props
+    const apiKey = user?.apiKey;
+    const userId = user?.id || user?._id || user?.email; // 💡 userId fallback
 
-  if (!apiKey) {
-    setResponseMsg('❌ API key not found. Please login again.');
-    setLoading(false);
-    return;
-  }
-
-  console.log('📦 Sending form data:', [...form.entries()]);
-
-  try {
-    const res = await fetch('https://indocsmails.onrender.com/config', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey, // ✅ Add API key to headers
-      },
-      body: form,
-    });
-
-    const data = await res.json();
-    console.log('📩 Response:', data);
-
-    if (data.success) {
-      setResponseMsg('✅ Configuration saved!');
-      toast.success("Configuration saved successfully! 🎉");
-    } else {
-      setResponseMsg(`❌ Failed to save config: ${data.error || 'Unknown error'}`);
+    if (!apiKey || !userId) {
+      setResponseMsg('❌ API key or user ID not found. Please login again.');
+      toast.error('API key or User ID missing! Please log in. 🔑');
+      setLoading(false);
+      return;
     }
-  } catch (err) {
-    console.error('❌ Network/Server Error:', err);
-    setResponseMsg('❌ Server error');
-  } finally {
-    setLoading(false);
-  }
-};
+
+    form.append('userId', userId); // ✅ Fix: Append userId to prevent dup error
+
+    try {
+      const res = await fetch('https://indocsmails.onrender.com/config', {
+        method: 'POST',
+        headers: {
+          'x-api-key': apiKey,
+        },
+        body: form,
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setResponseMsg('✅ Configuration saved!');
+        toast.success('Configuration saved successfully! 🎉');
+      } else {
+        setResponseMsg(`❌ Failed to save config: ${data.error || 'Unknown error'}`);
+        toast.error(`Failed to save config: ${data.error || 'Unknown error'} 😞`);
+      }
+    } catch (err) {
+      console.error('❌ Network/Server Error:', err);
+      setResponseMsg('❌ Server error');
+      toast.error('Server error. Please try again! 🚨');
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-10">
+    <main className="min-h-screen w-full flex items-center justify-center px-4 py-10">
       <form
         onSubmit={handleSubmit}
         className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-8 space-y-7 animate-fade-in border border-gray-200"

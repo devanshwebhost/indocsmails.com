@@ -28,12 +28,12 @@ export default function StartPage() {
       <div className="min-h-screen bg-gradient-to-br from-teal-700 to-cyan-800 flex flex-col items-center justify-center text-white text-center animate-fade-in-splash">
         {/* Indocs Media Logo (placeholder) */}
         <img
-          src="https://placehold.co/150x150/0F4C4C/FFFFFF?text=IM"
+          src="/logo.webp"
           alt="Indocs Media Logo"
-          className="h-32 w-32 rounded-full mb-6 shadow-lg border-4 border-teal-500 animate-zoom-in"
+          className="h-32 w-32 rounded-full mb-6 shadow-lg animate-zoom-in"
         />
         <h1 className="text-5xl font-extrabold tracking-wider animate-pulse">
-          Indocs Media
+          Indocs Mails
         </h1>
         <p className="mt-4 text-xl animate-fade-in-text">Loading...</p>
         <style>{`
@@ -64,7 +64,7 @@ export default function StartPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-green-100 to-blue-100">
       <div className="text-center p-6 max-w-xl bg-white shadow-2xl rounded-3xl border border-gray-200">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Indocs Mails 📬</h1>
-        <p className="text-gray-600 text-lg mb-6">A simple and secure authentication system built with Next.js</p>
+        <p className="text-gray-600 text-lg mb-6">A simple and secure authentication system <br/> Powered by <a href="https://indocsmedia.onrender.com" className="text-blue-500" target="_blank" rel="noopener noreferrer">Indocs Media</a></p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button

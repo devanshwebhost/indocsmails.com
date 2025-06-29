@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 // Removed Link from next/link to ensure broader React compatibility in Canvas
 import { toast } from 'react-toastify'; // Assuming toast is available for notifications
+import { Feedback } from "./Feedback";
 
 export default function Dashboard({ user }) {
   const [showKey, setShowKey] = useState(false);
@@ -110,7 +111,7 @@ export default function Dashboard({ user }) {
                   <span className="font-medium">
                     Want to know more about indocs mails and AI integration? Read our summaries blogs
                     <a
-                      href="/blogs"
+                      href="/Blogs"
                       className="text-blue-600 underline hover:text-blue-800 ml-1 font-semibold"
                     >
                       Our latest blogs
@@ -160,55 +161,11 @@ export default function Dashboard({ user }) {
           </div>
 
           {/* Right Column: Developer Feedback Section */}
-          {/* <div className="flex flex-col lg:w-1/3 space-y-8">
+          <div className="flex flex-col lg:w-1/3 space-y-8">
             <div className="p-6 bg-purple-50 rounded-2xl border border-purple-200 shadow-inner">
-              <h2 className="text-xl font-semibold text-purple-800 mb-4 flex items-center">
-                <svg className="w-5 h-5 mr-2 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5L6 11H5a1 1 0 100 2h1a1 1 0 00.867.5L10 9h1a1 1 0 100-2h-1z" clipRule="evenodd"></path></svg>
-                Developer Feedback
-              </h2>
-              <textarea
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out mb-4 resize-y"
-                rows="6"
-                placeholder="Share your problems, solutions, suggestions, or any other feedback here..."
-                value={feedbackText}
-                onChange={(e) => setFeedbackText(e.target.value)}
-                disabled={isSendingFeedback}
-              ></textarea>
-              <button
-                onClick={handleSendFeedback}
-                disabled={isSendingFeedback}
-                className={`w-full font-semibold py-3 px-6 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center space-x-2 ${
-                  isSendingFeedback
-                    ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                    : "bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white"
-                }`}
-              >
-                {isSendingFeedback ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Sending Feedback...</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
-                    <span>Send Feedback</span>
-                  </>
-                )}
-              </button>
-              {feedbackResponse && (
-                <div className={`mt-4 px-4 py-2 rounded-lg text-sm font-medium border ${
-                  feedbackResponse.type === 'success' ? 'bg-green-100 text-green-700 border-green-300' : 'bg-red-100 text-red-700 border-red-300'
-                }`}>
-                  {feedbackResponse.text}
-                </div>
-              )}
-
-              
+              <Feedback/>              
             </div>
-          </div> */}
+          </div>
         </div>
 
         {/* Logout Button */}
