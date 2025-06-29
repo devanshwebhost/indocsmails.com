@@ -65,7 +65,7 @@ export default function VerifyOTPPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-700 to-cyan-800 px-4">
       <div className="w-full max-w-md bg-white border border-gray-200 shadow-2xl rounded-2xl p-8 sm:p-10">
         <div className="flex flex-col items-center mb-6">
           <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center text-xl text-green-600 shadow-inner">

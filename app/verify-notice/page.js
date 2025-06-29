@@ -2,7 +2,7 @@
 
 export default function VerifyNotice() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-700 to-cyan-800 px-4">
       <div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-md w-full">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">✅ Signup successful! Please Verify Your Email</h2>
         <p className="text-gray-600 mb-4">
