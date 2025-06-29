@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 
 export default function StartPage() {
@@ -222,14 +223,14 @@ export default function StartPage() {
   <p className="text-gray-600 text-lg mb-6 leading-relaxed">
     A simple and secure authentication system <br />
     Powered by{' '}
-    <a
+    <Link
       href="https://indocsmedia.onrender.com"
       target="_blank"
       rel="noopener noreferrer"
       className="text-blue-600 font-medium underline hover:text-blue-700"
     >
       Indocs Media
-    </a>
+    </Link>
   </p>
 
   <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">

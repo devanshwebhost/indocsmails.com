@@ -111,7 +111,7 @@ export default function Dashboard({ user }) {
               <span className="text-green-600 font-bold">1.</span>
               <span>
                 Want to know more? Visit
-                <a href="/blogs" className="text-green-600 underline hover:text-blue-800 ml-1 font-semibold">Our latest blogs</a>.
+                <Link href="/blogs" className="text-green-600 underline hover:text-blue-800 ml-1 font-semibold">Our latest blogs</Link>.
               </span>
             </p>
             <p className="flex items-start gap-2">

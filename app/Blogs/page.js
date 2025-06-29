@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 
 // Main App Component that acts as the blog post
@@ -163,7 +164,7 @@ const Home = () => {
                     <li>**Team Notifications:** Automate project updates, task assignments, or internal announcements to ensure everyone is on the same page.</li>
                 </ul>
                 <p className="leading-relaxed">
-                    Leveraging a <a className="font-semibold text-indigo-600" href='/'>transactional email API</a> for these internal use cases ensures consistency, trackability, and reduces manual effort,
+                    Leveraging a <Link className="font-semibold text-indigo-600" href='/'>transactional email API</Link> for these internal use cases ensures consistency, trackability, and reduces manual effort,
                     leading to a more efficient and informed workforce.
                 </p>
             </section>
@@ -371,12 +372,12 @@ const Home = () => {
                     these services, you can build efficient, scalable, and reliable email solutions
                     for any application.
                 </p>
-                <a
+                <Link
                     href="/" // Placeholder for a real "explore APIs" link
                     className="inline-block bg-gradient-to-tr from-cyan-800 to-teal-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform "
                 >
                     Explore Email API Solutions
-                </a>
+                </Link>
             </footer>
 
         </article>
