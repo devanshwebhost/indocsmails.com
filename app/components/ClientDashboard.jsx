@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-// Removed Link from next/link to ensure broader React compatibility in Canvas
 import { toast } from 'react-toastify'; // Assuming toast is available for notifications
 import { Feedback } from "./Feedback";
+import Link from "next/link";
 
 export default function Dashboard({ user }) {
   const [showKey, setShowKey] = useState(false);
