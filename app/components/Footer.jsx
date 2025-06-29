@@ -82,12 +82,6 @@ export default async function Footer() {
         </div>
       </div>
 
-      {user && (
-        <div className="mt-10 border-t border-red-400 pt-6 text-center">
-          <DeleteAccountSection user={user} />
-        </div>
-      )}
-
       <div className="mt-10 border-t border-teal-600 pt-6 text-center text-sm text-gray-300">
         © {new Date().getFullYear()} Indocs Mails · Built with 💙 by{" "}
         <span className="text-white font-semibold">Indocs <span className='text-[#08b3ca] '>Media</span> </span>
