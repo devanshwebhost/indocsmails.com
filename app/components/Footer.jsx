@@ -1,10 +1,22 @@
-'use client';
-import Link from 'next/link';
-import React from 'react';
+// components/Footer.jsx
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { connectDB } from "@/lib/mongodb";
+import User from "@/models/User";
+import DeleteAccountSection from "./DeleteAccountSection"; // client-side component
+import Link from "next/link";
 
-const Footer = () => {
+export default async function Footer() {
+  const session = await getServerSession(authOptions);
+
+  let user = null;
+  if (session?.user?.email) {
+    await connectDB();
+    user = await User.findOne({ email: session.user.email }).lean();
+  }
+
   return (
-    <footer className="bg-gradient-to-tr from-cyan-800 to-teal-700 text-white px-6 py-10 sm:px-12 lg:px-20">
+    <footer className="bg-gradient-to-tr from-cyan-800 to-teal-700 text-white px-6 py-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Indocs Mails Branding */}
         <div>
@@ -70,13 +82,16 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Copyright */}
+      {user && (
+        <div className="mt-10 border-t border-red-400 pt-6 text-center">
+          <DeleteAccountSection user={user} />
+        </div>
+      )}
+
       <div className="mt-10 border-t border-teal-600 pt-6 text-center text-sm text-gray-300">
         © {new Date().getFullYear()} Indocs Mails · Built with 💙 by{" "}
         <span className="text-white font-semibold">Indocs <span className='text-[#08b3ca] '>Media</span> </span>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

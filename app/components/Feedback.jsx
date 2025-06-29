@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-
+// const token = process.env.PERSONAL_ACCESS_TOKEN;
 const apiBase = "https://indocsmails.onrender.com";
 const apiKey = "95e6d661b2c2271df05cbc2ad72d112ecdfacea37d1f678255cc185be733d9bf"; // Replace securely in production
 
