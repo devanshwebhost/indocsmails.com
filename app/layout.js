@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Indocs Mails | Free Email API for Developers & Internal Alerts",
+   verification: {
+    google: 'pZDCYRhm4DgxnB-1-n5iE0zPl9DinbP5VwfOMN1hYpU', // ✅ Correct spot
+  },
   description:
     "Indocs Mails is a free and powerful email API for developers to send transactional emails, internal notifications, alerts, and reports programmatically using Python, Node.js, Java, PHP, Ruby, C#, Go, and more.",
   keywords: [
