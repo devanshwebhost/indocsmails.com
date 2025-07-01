@@ -227,11 +227,13 @@ export default function StartPage() {
       href="https://indocsmedia.onrender.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="text-blue-600 font-medium underline hover:text-blue-700"
+      className="text-green-600 font-medium underline hover:text-green-700"
     >
       Indocs Media
     </Link>
+    <p>Please read our  <Link href="/legal/terms" className="hover:text-green-700 text-green-600">Terms & Conditions</Link></p>
   </p>
+  
 
   <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
     <button

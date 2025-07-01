@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -108,7 +109,8 @@ export default function SignupPage() {
               onChange={handleChange}
               className="mr-2 accent-cyan-600"
             />
-            I agree to the <span className="text-cyan-700 ml-1 underline cursor-pointer">terms and conditions *</span>
+            I agree to the <span className="text-cyan-700 ml-1 underline cursor-pointer"><Link href="/legal/terms" className="hover:text-white">Terms & Conditions</Link>
+</span>
           </label>
 
           <button
